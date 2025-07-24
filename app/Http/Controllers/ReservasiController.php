@@ -2,39 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\reservasi;
+use App\Models\Customers;
+use App\Models\Reservasi;
 use Illuminate\Http\Request;
 
 class ReservasiController extends Controller
 {
     public function index()
     {
-        $reservasis = reservasi::all();
-        return response()->json($reservasis);
+        $reservasis = Reservasi::with(['customer', 'hargaHariIni.kamar'])->get();
+        return view('reservasi.index', compact('reservasis'));
     }
-
     public function show($id)
     {
-        $reservasi = Reservasi::find($id);
-        return response()->json($reservasi);
+        $reservasi = Reservasi::findOrFail($id);
+        return view('reservasi.show', compact('reservasi'));
     }
-
+    public function create()
+    {
+        $customers = \App\Models\Customers::all();
+        $harga_hari_inis = \App\Models\Harga_hari_ini::with('kamar')->get();
+        return view('reservasi.create', compact('customers', 'harga_hari_inis'));
+    }
     public function store(Request $request)
     {
-        $reservasi = Reservasi::create($request->all());
-        return response()->json($reservasi, 201);
-    }
+        $validated = $request->validate([
+            'customer_id'    => 'required|exists:customers,id',
+            'tanggal'        => 'required|date',
+            'tanggal_mulai'  => 'required|date',
+            'tanggal_akhir'  => 'required|date|after:tanggal_mulai',
+            'id_hotel'       => 'required|exists:harga_hari_inis,id_hotel',
+        ]);
 
-    public function update(Request $request, $id)
+        Reservasi::create($validated);
+        return redirect()->route('reservasi.index');
+    }
+    public function edit($id)
     {
         $reservasi = Reservasi::findOrFail($id);
-        $reservasi->update($request->all());
-        return response()->json($reservasi, 200);
+        $customers = \App\Models\Customers::all();
+        $harga_hari_inis = \App\Models\Harga_hari_ini::with('kamar')->get();
+        return view('reservasi.edit', compact('reservasi', 'customers', 'harga_hari_inis'));
     }
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'customer_id'    => 'required|exists:customers,id',
+            'tanggal'        => 'required|date',
+            'tanggal_mulai'  => 'required|date',
+            'tanggal_akhir'  => 'required|date|after:tanggal_mulai',
+            'id_hotel'       => 'required|exists:harga_hari_inis,id_hotel',
+        ]);
 
+        $reservasis = reservasi::findOrFail($id); // <- perbaiki di sini
+        $reservasis->update($validated);
+        return redirect()->route('reservasi.index');
+    }
     public function destroy($id)
     {
-        Reservasi::destroy($id);
-        return response()->json(null, 204);
+        $reservasis = reservasi::findOrFail($id); // <- perbaiki di sini
+        $reservasis->delete();
+        return redirect()->route('reservasi.index');
     }
 }

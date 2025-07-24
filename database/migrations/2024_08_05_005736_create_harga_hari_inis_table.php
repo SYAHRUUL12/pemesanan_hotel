@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('harga_hari_inis', function (Blueprint $table) {
             $table->bigIncrements('id_hotel');
             $table->integer('harga');
-            $table->integer('avalaible_room');
+            $table->integer('available_room');
             $table->date('tanggal');
             $table->unsignedBigInteger('id_kamar');
             $table->foreign('id_kamar')->references('id')->on('kamars');
             $table->timestamps();
+        });
+        Schema::table('harga_hari_inis', function (Blueprint $table) {
+            $table->renameColumn('avalaible_room', 'available_room');
         });
     }
 
@@ -27,6 +30,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('harga_hari_inis', function (Blueprint $table) {
+            $table->renameColumn('available_room', 'avalaible_room');
+        });
         Schema::dropIfExists('harga_hari_inis');
     }
 };

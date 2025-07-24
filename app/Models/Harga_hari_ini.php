@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Harga_hari_ini extends Model
 {
     use HasFactory;
-    protected $table = 'harga_hari_ini';
+    protected $table = 'harga_hari_inis';
     protected $primaryKey = 'id_hotel';
     protected $fillable = [
         'harga', 'available_room', 'tanggal', 'id_kamar'

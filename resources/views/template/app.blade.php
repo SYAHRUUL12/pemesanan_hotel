@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Dashboard Siakad</title>
+  <title>Pemesanan Hotel</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="{{ asset('modules/bootstrap/css/bootstrap.min.css') }}">
@@ -58,6 +58,21 @@
     /* Sidebar mulai di bawah navbar */
     .main-sidebar {
       margin-top: 64px;
+    }
+
+    @media (max-width: 991.98px) {
+      .main-sidebar {
+        left: -260px;
+        transition: left 0.3s;
+      }
+
+      .main-sidebar.active {
+        left: 0;
+      }
+
+      body.sidebar-gone .main-sidebar {
+        left: -260px !important;
+      }
     }
   </style>
 </head>
@@ -238,8 +253,11 @@
             <li class="nav-item{{ request()->is('customers') ? ' active' : '' }}">
               <a class="nav-link" href="{{ url('/customers') }}"><i class="fas fa-user-friends"></i> <span>Customer</span></a>
             </li>
-            <li class="nav-item{{ request()->is('kwintasi') ? ' active' : '' }}">
-              <a class="nav-link" href="{{ url('/kwintasi') }}"><i class="fas fa-chalkboard-teacher"></i> <span>Kamar</span></a>
+            <li class="nav-item{{ request()->is('kamar') ? ' active' : '' }}">
+              <a class="nav-link" href="{{ url('/kamar') }}"><i class="fas fa-chalkboard-teacher"></i> <span>Kamar</span></a>
+            </li>
+            <li class="nav-item{{ request()->is('harga_hari_ini') ? ' active' : '' }}">
+              <a class="nav-link" href="{{ url('/harga_hari_ini') }}"><i class="fas fa-calendar"></i> <span>Harga Hari Ini</span></a>
             </li>
             <li class="nav-item{{ request()->is('invoice') ? ' active' : '' }}">
               <a class="nav-link" href="{{ url('/invoice') }}"><i class="fas fa-file-invoice"></i> <span>Invoice</span></a>
@@ -247,8 +265,8 @@
             <li class="nav-item{{ request()->is('pembayaran') ? ' active' : '' }}">
               <a class="nav-link" href="{{ url('/pembayaran') }}"><i class="fas fa-credit-card"></i> <span>Pembayaran</span></a>
             </li>
-            <li class="nav-item{{ request()->is('penyewa') ? ' active' : '' }}">
-              <a class="nav-link" href="{{ url('/penyewas') }}"><i class="fas fa-user-graduate"></i> <span>Reservasi</span></a>
+            <li class="nav-item{{ request()->is('reservasi') ? ' active' : '' }}">
+              <a class="nav-link" href="{{ url('/reservasi') }}"><i class="fas fa-user-graduate"></i> <span>Reservasi</span></a>
             </li>
           </ul>
           <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
@@ -298,6 +316,12 @@
   <!-- Template JS File -->
   <script src="{{ asset('js/scripts.js') }}"></script>
   <script src="{{ asset('js/custom.js') }}"></script>
+  <script>
+  $('#sidebarToggle').on('click', function() {
+    $('.main-sidebar').toggleClass('active');
+    $('body').toggleClass('sidebar-gone');
+  });
+</script>
 </body>
 
 </html>

@@ -1,0 +1,54 @@
+@extends('template.app')
+@section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-body">
+                    <h3 class="mb-4">Edit Harga Hari Ini</h3>
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ route('harga_hari_ini.update', $harga_hari_ini->id_hotel) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label for="id_kamar" class="form-label">Kamar</label>
+                            <select class="form-control" id="id_kamar" name="id_kamar" required>
+                                <option value="">-- Pilih Kamar --</option>
+                                @foreach($kamars as $kamar)
+                                    <option value="{{ $kamar->id }}" {{ $harga_hari_ini->id_kamar == $kamar->id ? 'selected' : '' }}>
+                                        {{ $kamar->nama_kamar }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ old('tanggal', $harga_hari_ini->tanggal) }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="harga" class="form-label">Harga</label>
+                            <input type="number" class="form-control" id="harga" name="harga" value="{{ old('harga', $harga_hari_ini->harga) }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="available_room" class="form-label">Available Room</label>
+                            <input type="number" class="form-control" id="available_room" name="available_room" value="{{ old('available_room', $harga_hari_ini->available_room) }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update</button>
+                        <a href="{{ route('harga_hari_ini.index') }}" class="btn btn-outline-secondary w-100 mt-2">
+                            <i class="fas fa-arrow-left"></i> Batal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
